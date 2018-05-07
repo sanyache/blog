@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}Редагування поста{% endblock %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item"><a href="{% url 'home' %}">Розділ</a></li>
+  <li class="breadcrumb-item"><a href="{% url 'board_topics' post.topic.board.pk %}">{{ post.topic.board.name }}</a></li>
+  <li class="breadcrumb-item"><a href="{% url 'topic_posts' post.topic.board.pk post.topic.pk %}">{{ post.topic.subject }}</a></li>
+  <li class="breadcrumb-item active">Редагувати пост</li>
+{% endblock %}
+
+{% block content %}
+  <form method="post" class="mb-4" novalidate>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Зберегти зміни</button>
+
+    <a href="{% url 'topic_posts' post.topic.board.pk post.topic.pk %}" class="btn btn-outline-secondary" role="button">Відмінити</a>
+    <a href="{% url 'reply_delete' post.topic.board.pk post.topic.pk post.pk %}" class="btn btn-danger" role="button">Видалити</a>
+  </form>
+{% endblock %}

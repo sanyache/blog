@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static from staticfiles %}
+{% block meta_title %}Login {% endblock meta_title %}
+{% block extra_css %}
+
+{% endblock extra_css %}
+{% block title %}{% trans 'Login' %}{% endblock title %}
+{% block content %}
+<div class="container">
+ <form  action="{% url 'login' %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{% url 'home' %}">
+
+    <div class="form-group row">
+        <label class="col-sm-2" for="login">{% trans 'Your login' %}</label>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" id="login" value="" name="username">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2" for="password">{% trans 'Password' %}</label>
+        <div class="col-sm-3">
+            <input type="password" class="form-control" id="password" value="" name="password">
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-5">
+            <button type="submit" class="btn btn-primary">{% trans 'Enter' %}</button>
+            <a href="{% url 'home' %}" class="btn btn-default" role="button">{% trans 'Cancel' %}</a>
+            <!--<a href="#">Забули пароль?</a>-->
+        </div>
+    </div>
+ </form>
+</div>
+{% endblock content %}

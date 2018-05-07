@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% block meta_title %}Sign up{% endblock meta_title %}
+{% block extra_css %}
+
+{% endblock extra_css %}
+{% block title %}{% endblock title %}
+{% block body %}
+<div class="container">
+    <h2>Sign up</h2>
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button type="submit" class="btn btn-primary">Create</button>
+        <a href="{% url 'home' %}" class="btn btn-default" role="button">Cancel</a>
+    </form>
+    <div class="text-center">
+        'Have you an account? <a href="{% url 'login' %}">Log in</a>
+
+    </div>
+</div>
+
+{% endblock body %}

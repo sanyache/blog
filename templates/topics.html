@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  {{ board.name }} - {{ block.super }}
+{% endblock %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item"><a href="{% url 'home' %}">Розділи</a></li>
+  <li class="breadcrumb-item active">{{ board.name }}</li>
+{% endblock %}
+
+{% block content %}
+    <div class="mb-4">
+        <a href="{% url 'new_topic' board.pk %}" class="btn btn-primary">Нова тема</a>
+    </div>
+
+    <table class="table">
+        <thead class="thead-inverse">
+            <tr>
+                <th>Теми</th>
+                <th>Автор</th>
+                <th>Коменти</th>
+                <th>Перегляди</th>
+                <th>Оновлення</th>
+                {% if user.is_authenticated %}
+                <th>Дія</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+        {% for topic in topics %}
+            <tr>
+                <td><a href="{% url 'topic_posts' board.pk topic.pk %}">{{ topic.subject }}</a></td>
+                <td>{{ topic.starter.username }}</td>
+                <td>{{ topic.replies }}</td>
+                <td>{{ topic.views }}</td>
+                <td>{{ topic.last_updated }}</td>
+                <td>{% if user == topic.starter %}
+                     <div class="dropdown">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                            Дії
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="{% url 'edit_topic' topic.board.pk topic.pk %}">Редагувати</a>
+                            <a class="dropdown-item" href="{% url 'topic_delete' topic.board.pk topic.pk %}">Видалити</a>
+
+                        </div>
+                     </div>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

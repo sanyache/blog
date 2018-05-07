@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+    {% block breadcrumb %}
+        <li class="breadcrumb-item active">Розділи</li>
+    {% endblock %}
+
+    {% block content %}
+      <table class="table">
+        <thead class="thead-inverse">
+          <tr>
+            <th>Розділи</th>
+            <th>Теми</th>
+            <th>Пости</th>
+            <th>Останній допис</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for board in boards %}
+            <tr>
+              <td>
+                  <a href="{% url 'board_topics' board.pk %}">{{ board.name }}</a>
+
+              </td>
+              <td class="align-middle">{{ board.topics.count }}</td>
+              <td class="align-middle">{{ board.get_posts_count }}</td>
+              <td>
+                  {% with post=board.get_last_post %}
+                  {% if post %}
+                    <small>
+                        <a href="{% url 'topic_posts' board.pk post.topic.pk %}">{{ post.created_by.username }} {{ post.created_at }}</a>
+                  {% else %}
+                    <small class="text-muted">
+                        <em>Пости відсутні</em>
+                    </small>
+                  {% endif %}
+                  {% endwith %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endblock content %}

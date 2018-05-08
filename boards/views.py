@@ -60,16 +60,26 @@ def topic_posts(request, pk, topic_pk):
 def reply_topic(request, pk, topic_pk):
     topic = get_object_or_404(Topic, board__pk=pk, pk=topic_pk)
     if request.method == 'POST':
-        form = PostForm(request.POST)
+        if request.user.is_authenticated:
+            form = PostForm(request.POST)
+        else:
+            form = AnonimPostForm(request.POST)
         if form.is_valid():
             post = form.save(commit=False)
             post.topic = topic
-            post.created_by = request.user
+            if request.user.is_authenticated:
+                post.created_by = request.user
+            else:
+                post.anonim_name = form.cleaned_data['anonim_name']
+                post.anonim_mail = form.cleaned_data['anonim_mail']
             post.save()
             hash_create(form, post)
             return redirect('topic_posts', pk=pk, topic_pk=topic_pk)
     else:
-        form = PostForm()
+        if request.user.is_authenticated:
+            form = PostForm()
+        else:
+            form = AnonimPostForm()
     return render(request, 'reply_topic.html', {'topic': topic, 'form': form})
 
 @method_decorator(login_required, name='dispatch')
@@ -97,11 +107,13 @@ def reply_delete(request, pk, topic_pk, post_pk):
     post.delete()
     return HttpResponseRedirect(reverse('topic_posts', kwargs={'pk': pk, 'topic_pk': topic_pk} ))
 
+@login_required
 def topic_delete(request, pk, topic_pk):
     topic = get_object_or_404(Topic, board__pk=pk, pk=topic_pk)
     topic.delete()
     return HttpResponseRedirect(reverse ('board_topics', kwargs={'pk':pk}))
 
+@login_required
 def topic_edit(request, pk, topic_pk):
     board = get_object_or_404(Board, pk=pk)
     topic = get_object_or_404(Topic, board__pk=pk, pk=topic_pk)

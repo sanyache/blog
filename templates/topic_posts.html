@@ -29,7 +29,7 @@
               <div class="col-6">
                 {% if post.created_by %}
                 <strong class="text-muted">{{ post.created_by.username }}</strong>
-                <small class="text-muted">{{ user.email }}</small>
+                <small class="text-muted">{{ post.created_by.email }}</small>
                 {% else %}
                 <strong class="text-muted">{{ post.anonim_name }} {{post.anonim_mail}}</strong>
                 {% endif %}

@@ -12,7 +12,7 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from .models import Board, Post, Topic, HashTag
-from .forms import NewTopicForm, PostForm
+from .forms import NewTopicForm, EditTopicForm, PostForm, AnonimPostForm
 
 # Create your views here.
 
@@ -89,6 +89,7 @@ class PostUpdateView(UpdateView):
         post.updated_by = self.request.user
         post.updated_at = timezone.now()
         post.save()
+        hash_create(form, post)
         return redirect('topic_posts', pk=post.topic.board.pk, topic_pk=post.topic.pk)
 
 def reply_delete(request, pk, topic_pk, post_pk):
@@ -105,17 +106,18 @@ def topic_edit(request, pk, topic_pk):
     board = get_object_or_404(Board, pk=pk)
     topic = get_object_or_404(Topic, board__pk=pk, pk=topic_pk)
     if request.method == "POST":
-        form = NewTopicForm(request.POST, instance=topic)
+        form = EditTopicForm(request.POST, instance=topic)
         if form.is_valid():
             topic = form.save(commit=False)
             topic.board = board
             topic.starter = request.user
+
             topic.save()
-            post = Post.objects.create(message=form.cleaned_data.get('message'), topic=topic, created_by=request.user)
-            hash_create(form, post)
+            #post = Post.objects.create(message=form.cleaned_data.get('message'), topic=topic, created_by=request.user)
+            #hash_create(form, post)
             return redirect('topic_posts', pk=pk, topic_pk=topic.pk)
     else:
-        form = NewTopicForm(instance=topic)
+        form = EditTopicForm(instance=topic)
     return render(request, 'edit_topic.html', {'form': form})
 
 

@@ -12,8 +12,8 @@
         {% csrf_token %}
         {{ form.as_p }}
 
-        <button type="submit" class="btn btn-primary">Create</button>
-        <a href="{% url 'home' %}" class="btn btn-default" role="button">Cancel</a>
+        <button type="submit" class="btn btn-primary">Створити</button>
+        <a href="{% url 'home' %}" class="btn btn-default" role="button">Скасувати</a>
     </form>
     <div class="text-center">
         'Have you an account? <a href="{% url 'login' %}">Log in</a>

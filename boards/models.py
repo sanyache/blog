@@ -35,7 +35,9 @@ class Post(models.Model):
     topic = models.ForeignKey(Topic, related_name='posts')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(null=True)
-    created_by = models.ForeignKey(User, related_name='posts')
+    created_by = models.ForeignKey(User, related_name='posts', blank=True, null=True )
+    anonim_name = models.CharField(max_length=50, blank=True, null=True)
+    anonim_mail = models.EmailField(max_length=50, blank=True, null=True)
     updated_by = models.ForeignKey(User, null=True, related_name='+')
 
     def __unicode__(self):
